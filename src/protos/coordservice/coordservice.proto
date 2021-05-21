@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+service CoordsService {
+    rpc WriteCoords (WriteCoordsReq)        returns (WriteCoordsResp);
+    rpc GetCoords   (GetCoordsReq)          returns (stream GetCoordsResp);
+}
+
+message WriteCoordsReq {
+    string id   = 1;
+    double lat  = 2;
+    double long = 3;
+};
+
+message WriteCoordsResp {
+};
+
+message GetCoordsReq {
+    repeated string id = 1;
+};
+
+message GetCoordsResp {
+    string id       = 1;
+    double lat      = 2;
+    double long     = 3;
+};
+
+enum Resuource {
+    TRUCK                       = 0;
+    ECAVATOR                    = 1;
+    ROTARY_LOADER               = 2;
+    PLOW_AND_BRUSH_MACHINE      = 3;
+    PLOW_AND_BRUSH_MACHINE_REG  = 4;
+    HUMAN                       = 6;
+};
+
+message Coordinates {
+    string dt       = 1;
+    string id       = 2;
+    Resuource type  = 3;
+    double lat      = 4;
+    double long     = 5;
+};
