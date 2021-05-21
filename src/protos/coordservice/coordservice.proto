@@ -70,8 +70,9 @@ message Unit{
 };
 
 message Operaions {
-    Coords from = 1;
-    Coords to   = 2;
+    Coords from             = 1;
+    Coords to               = 2;
+    string operation_name   = 3;
 };
 
 service CoordsService {
@@ -85,5 +86,5 @@ service CoordsService {
     rpc LoadingSnowFromTemp(OpeataionOn)    returns         (Empty);
     rpc ExportSnowFromTemp(OperationFromTo) returns         (Empty);
     rpc ClearTemp(OpeataionOn)              returns         (Empty);
-    rpc ListenCommands(Unit)               returns          (stream Operaions);
+    rpc ListenCommands(Unit)                returns          (stream Operaions);
 }
