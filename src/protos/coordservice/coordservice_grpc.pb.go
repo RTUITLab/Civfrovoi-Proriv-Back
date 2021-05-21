@@ -29,6 +29,7 @@ type CoordsServiceClient interface {
 	ExportSnowFromTemp(ctx context.Context, in *OperationFromTo, opts ...grpc.CallOption) (*Empty, error)
 	ClearTemp(ctx context.Context, in *OpeataionOn, opts ...grpc.CallOption) (*Empty, error)
 	ListenCommands(ctx context.Context, in *Unit, opts ...grpc.CallOption) (CoordsService_ListenCommandsClient, error)
+	InitApp(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ID, error)
 }
 
 type coordsServiceClient struct {
@@ -184,6 +185,15 @@ func (x *coordsServiceListenCommandsClient) Recv() (*Operaions, error) {
 	return m, nil
 }
 
+func (c *coordsServiceClient) InitApp(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ID, error) {
+	out := new(ID)
+	err := c.cc.Invoke(ctx, "/CoordsService/InitApp", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CoordsServiceServer is the server API for CoordsService service.
 // All implementations must embed UnimplementedCoordsServiceServer
 // for forward compatibility
@@ -199,6 +209,7 @@ type CoordsServiceServer interface {
 	ExportSnowFromTemp(context.Context, *OperationFromTo) (*Empty, error)
 	ClearTemp(context.Context, *OpeataionOn) (*Empty, error)
 	ListenCommands(*Unit, CoordsService_ListenCommandsServer) error
+	InitApp(context.Context, *Empty) (*ID, error)
 	mustEmbedUnimplementedCoordsServiceServer()
 }
 
@@ -238,6 +249,9 @@ func (UnimplementedCoordsServiceServer) ClearTemp(context.Context, *OpeataionOn)
 }
 func (UnimplementedCoordsServiceServer) ListenCommands(*Unit, CoordsService_ListenCommandsServer) error {
 	return status.Errorf(codes.Unimplemented, "method ListenCommands not implemented")
+}
+func (UnimplementedCoordsServiceServer) InitApp(context.Context, *Empty) (*ID, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method InitApp not implemented")
 }
 func (UnimplementedCoordsServiceServer) mustEmbedUnimplementedCoordsServiceServer() {}
 
@@ -456,6 +470,24 @@ func (x *coordsServiceListenCommandsServer) Send(m *Operaions) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _CoordsService_InitApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoordsServiceServer).InitApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/CoordsService/InitApp",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoordsServiceServer).InitApp(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CoordsService_ServiceDesc is the grpc.ServiceDesc for CoordsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -498,6 +530,10 @@ var CoordsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ClearTemp",
 			Handler:    _CoordsService_ClearTemp_Handler,
+		},
+		{
+			MethodName: "InitApp",
+			Handler:    _CoordsService_InitApp_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
