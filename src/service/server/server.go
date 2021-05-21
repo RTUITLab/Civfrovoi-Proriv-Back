@@ -11,14 +11,26 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
+	"github.com/streadway/amqp"
 )
+
+type Config struct {
+	GetCoordsTime	string
+}
 
 type Server struct {
 	pb.UnimplementedCoordsServiceServer
 	DB *gorm.DB
+	RabbitConn	*amqp.Connection
+	GetCoordTime	time.Duration
+}
+
+func New() *Server {
+	return &Server{}
 }
 
 func(s *Server)	WriteCoords(ctx context.Context, req *pb.WriteCoordsReq) (*pb.WriteCoordsResp, error) {
+	logger := prepareEntrty("WriteCoords")
 	Get := &model.Coordinates{
 		ID: req.Id,
 	}
@@ -26,6 +38,7 @@ func(s *Server)	WriteCoords(ctx context.Context, req *pb.WriteCoordsReq) (*pb.Wr
 	if err := s.DB.First(Get).Error; err == gorm.ErrRecordNotFound {
 		return nil, status.Error(codes.Unauthenticated, "Your id is not exist")
 	} else if err != nil {
+		logger.Error("Failed to wrire coords: ", err)
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
@@ -34,6 +47,7 @@ func(s *Server)	WriteCoords(ctx context.Context, req *pb.WriteCoordsReq) (*pb.Wr
 	Get.Long = req.Long
 
 	if err := s.DB.Updates(Get).Error; err != nil {
+		logger.Error("Failed to wrire coords: ", err)
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
@@ -41,41 +55,57 @@ func(s *Server)	WriteCoords(ctx context.Context, req *pb.WriteCoordsReq) (*pb.Wr
 }
 
 func(s *Server)	GetCoords(req *pb.Units, stream pb.CoordsService_GetCoordsServer) error {
+	logger := prepareEntrty("GetCoords")
+	timer := time.NewTimer(s.GetCoordTime)
 	for {
-		var Coords []*model.Coordinates
-		if err := s.DB.Find(&Coords, req.Ids).Error; err == gorm.ErrRecordNotFound {
-			return status.Error(codes.InvalidArgument, "This ids is not exsist")
-		}
-		
-		for _, c := range Coords {
+		select {
+		case <- timer.C:
+			timer.Stop()
+			var Coords []*model.Coordinates
+			if err := s.DB.Find(&Coords, req.Ids).Error; err == gorm.ErrRecordNotFound {
+				return status.Error(codes.InvalidArgument, "This ids is not exsist")
+			}
+			resp := &pb.GetCoordsResp{}
+			for _, c := range Coords {
+				resp.Coords = append(
+					resp.Coords, 
+					&pb.UnitWithCords{
+						Id: c.ID,
+						Coords: &pb.Coords{
+							Lat: c.Lat,
+							Long: c.Long,
+						},
+					},
+				)
+			}
 			err := stream.Send(
-				&pb.GetCoordsResp{
-					Id: c.ID,
-					Lat: c.Lat,
-					Long: c.Long,
-				},
+				resp,
 			)
 
 			if stats, ok := status.FromError(err); ok && stats.Code() == codes.Canceled {
-				log.Info("Canceled")
+				logger.Info("Canceled")
 				return nil
 			} else if err != nil {
-				log.Error("Err on streaming")
+				logger.Error("Error on streaming: ", err)
 				return status.Error(
 					codes.Internal,
 					err.Error(),
 				)
 			}
+			timer.Reset(s.GetCoordTime)
 		}
+		
 	}
 }
 
 func(s *Server) UpdateUnits(ctx context.Context, req *pb.UpdateUnitsReq) (*pb.UpdateUnitsResp, error) {
+	logger := prepareEntrty("UpdateUnits")
 	var Coor []*model.Coordinates
 
 	if err := s.DB.Find(&Coor).Error; err == gorm.ErrRecordNotFound {
 		// Pass
 	} else if err != nil {
+		logger.Error("Faield to updated units", err)
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
@@ -109,11 +139,12 @@ func(s *Server)	ClearTemp(ctx context.Context, req *pb.OpeataionOn) (*pb.Empty, 
 	panic("Not imolemented")
 }
 
-func(s *Server)	ListenCommands(*pb.Unit, pb.CoordsService_ListenCommandsServer) error{
+func(s *Server)	ListenCommands(req *pb.Unit, resp pb.CoordsService_ListenCommandsServer) error{
 	panic("Not imolemented")
 }
 
-func(s *Server) InitApp(ctx context.Context, req *pb.Empty) (*pb.ID, error) {
+func(s *Server) InitApp(ctx context.Context, req *pb.InitReq) (*pb.ID, error) {
+	logger := prepareEntrty("InitApp")
 	uuid := ksuid.New()
 
 	c := &model.Coordinates{
@@ -121,12 +152,23 @@ func(s *Server) InitApp(ctx context.Context, req *pb.Empty) (*pb.ID, error) {
 		DateTime: time.Now(),
 		Lat: 0,
 		Long: 0,
+		Resource: req.Type,
 	}
 
 	if err := s.DB.Create(c).Error; err != nil {
-		log.Error("Faield to init App")
+		logger.Error("Faield to init App: ", err)
 		return nil, status.Error(codes.Internal, "faield to get")
 	}
 
 	return &pb.ID{Id: uuid.String()}, nil
+}
+
+func prepareEntrty(
+	Method 	string,
+) *log.Entry {
+	return log.WithFields(
+		log.Fields{
+			"method": Method,
+		},
+	)
 }

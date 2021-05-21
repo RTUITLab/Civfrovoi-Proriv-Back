@@ -87,7 +87,7 @@ func TestFunc_WriteCoords(t *testing.T) {
 func TestFunc_InitApp(t *testing.T) {
 	id, err := _server.InitApp(
 		context.Background(),
-		&pb.Empty{},
+		&pb.InitReq{},
 	)
 	if err != nil {
 		t.Log(err)
@@ -125,6 +125,8 @@ func TestFunc_GetCoords(t *testing.T) {
 			t.Log(err)
 			t.FailNow()
 		}
+		t.Log("Recived")
+		
 
 		t.Log(c.String())
 		if count == 100 {
@@ -158,5 +160,19 @@ func TestFunc_UpdateUnits(t *testing.T) {
 
 	for _, u := range units.Coords {
 		t.Log(u.String())
+	}
+}
+
+func TestFunc(t *testing.T) {
+	d := 2 * time.Second
+	timer := time.NewTimer(d)
+	for {
+		select{
+		case <-timer.C:
+			timer.Stop()
+			t.Log("Time")
+			time.Sleep(time.Second)
+			timer.Reset(d)
+		}
 	}
 }

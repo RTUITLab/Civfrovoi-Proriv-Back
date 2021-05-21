@@ -29,7 +29,7 @@ type CoordsServiceClient interface {
 	ExportSnowFromTemp(ctx context.Context, in *OperationFromTo, opts ...grpc.CallOption) (*Empty, error)
 	ClearTemp(ctx context.Context, in *OpeataionOn, opts ...grpc.CallOption) (*Empty, error)
 	ListenCommands(ctx context.Context, in *Unit, opts ...grpc.CallOption) (CoordsService_ListenCommandsClient, error)
-	InitApp(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ID, error)
+	InitApp(ctx context.Context, in *InitReq, opts ...grpc.CallOption) (*ID, error)
 }
 
 type coordsServiceClient struct {
@@ -185,7 +185,7 @@ func (x *coordsServiceListenCommandsClient) Recv() (*Operaions, error) {
 	return m, nil
 }
 
-func (c *coordsServiceClient) InitApp(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*ID, error) {
+func (c *coordsServiceClient) InitApp(ctx context.Context, in *InitReq, opts ...grpc.CallOption) (*ID, error) {
 	out := new(ID)
 	err := c.cc.Invoke(ctx, "/CoordsService/InitApp", in, out, opts...)
 	if err != nil {
@@ -209,7 +209,7 @@ type CoordsServiceServer interface {
 	ExportSnowFromTemp(context.Context, *OperationFromTo) (*Empty, error)
 	ClearTemp(context.Context, *OpeataionOn) (*Empty, error)
 	ListenCommands(*Unit, CoordsService_ListenCommandsServer) error
-	InitApp(context.Context, *Empty) (*ID, error)
+	InitApp(context.Context, *InitReq) (*ID, error)
 	mustEmbedUnimplementedCoordsServiceServer()
 }
 
@@ -250,7 +250,7 @@ func (UnimplementedCoordsServiceServer) ClearTemp(context.Context, *OpeataionOn)
 func (UnimplementedCoordsServiceServer) ListenCommands(*Unit, CoordsService_ListenCommandsServer) error {
 	return status.Errorf(codes.Unimplemented, "method ListenCommands not implemented")
 }
-func (UnimplementedCoordsServiceServer) InitApp(context.Context, *Empty) (*ID, error) {
+func (UnimplementedCoordsServiceServer) InitApp(context.Context, *InitReq) (*ID, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InitApp not implemented")
 }
 func (UnimplementedCoordsServiceServer) mustEmbedUnimplementedCoordsServiceServer() {}
@@ -471,7 +471,7 @@ func (x *coordsServiceListenCommandsServer) Send(m *Operaions) error {
 }
 
 func _CoordsService_InitApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(InitReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -483,7 +483,7 @@ func _CoordsService_InitApp_Handler(srv interface{}, ctx context.Context, dec fu
 		FullMethod: "/CoordsService/InitApp",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CoordsServiceServer).InitApp(ctx, req.(*Empty))
+		return srv.(CoordsServiceServer).InitApp(ctx, req.(*InitReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

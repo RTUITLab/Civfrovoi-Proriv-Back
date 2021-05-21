@@ -53,6 +53,7 @@ func (a *App) Start() error {
 
 	Server := &server.Server{
 		DB: db,
+		GetCoordTime: time.Second,
 	}
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", a.Port))

@@ -23,10 +23,25 @@ services:
             - 8080:8080
         networks: 
             - database
+            - dev-network
+    message-broker:
+        image: rabbitmq:3-management-alpine
+        container_name: message-broker
+        ports:
+            - 5672:5672   # for sender and consumer connections
+            - 15672:15672 # for serve RabbitMQ GUI
+        volumes:
+            - ./dev-rabbitmq/data/:/var/lib/rabbitmq
+            - ./dev-rabbitmq/log/:/var/log/rabbitmq
+        restart: always
+        networks:
+            - dev-network
 
 
 volumes: 
     wp-db: {}
 networks: 
     database:
+        driver: "bridge"
+    dev-network:
         driver: "bridge"

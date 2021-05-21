@@ -7,8 +7,9 @@ import (
 )
 
 type Config struct {
-	DB		*DBConfig
-	App		*AppCfg
+	DB			*DBConfig
+	App			*AppCfg
+	RabbitMQ	*RabbitCfg
 }
 
 type DBConfig struct {
@@ -17,6 +18,10 @@ type DBConfig struct {
 
 type AppCfg struct {
 	Port	string		`envconfig:"CP_APP_PORT"`
+}
+
+type RabbitCfg struct {
+	URL		string		`envconfig:"CP_AMQP_SERVER_URL"`
 }
 
 func GetConfig() *Config {
