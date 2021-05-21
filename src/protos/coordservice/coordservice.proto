@@ -16,9 +16,7 @@ message GetCoordsReq {
 };
 
 message GetCoordsResp {
-    string id       = 1;
-    double lat      = 2;
-    double long     = 3;
+    repeated UnitWithCords coords = 1;
 };
 
 message UpdateUnitsReq {
@@ -69,6 +67,11 @@ message Unit{
     string id = 1;
 };
 
+message UnitWithCords {
+    string id = 1;
+    Coords coords = 2;
+}
+
 message Operaions {
     Coords from             = 1;
     Coords to               = 2;
@@ -77,6 +80,10 @@ message Operaions {
 
 message ID {
     string id = 1;
+};
+
+message InitReq {
+    Resuource type = 1;
 };
 
 service CoordsService {
@@ -91,5 +98,5 @@ service CoordsService {
     rpc ExportSnowFromTemp(OperationFromTo) returns         (Empty);
     rpc ClearTemp(OpeataionOn)              returns         (Empty);
     rpc ListenCommands(Unit)                returns         (stream Operaions);
-    rpc InitApp(Empty)                      returns         (ID);
+    rpc InitApp(InitReq)                    returns         (ID);
 };
