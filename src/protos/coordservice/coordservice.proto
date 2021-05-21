@@ -1,21 +1,18 @@
 syntax = "proto3";
 
-service CoordsService {
-    rpc WriteCoords (WriteCoordsReq)        returns (WriteCoordsResp);
-    rpc GetCoords   (GetCoordsReq)          returns (stream GetCoordsResp);
-}
-
 message WriteCoordsReq {
     string id   = 1;
     double lat  = 2;
     double long = 3;
 };
 
+message Empty{};
+
 message WriteCoordsResp {
 };
 
 message GetCoordsReq {
-    repeated string id = 1;
+    repeated string ids = 1;
 };
 
 message GetCoordsResp {
@@ -24,13 +21,20 @@ message GetCoordsResp {
     double long     = 3;
 };
 
+message UpdateUnitsReq {
+};
+
+message UpdateUnitsResp {
+    repeated Coordinates coords = 1;
+};
+
 enum Resuource {
     TRUCK                       = 0;
     ECAVATOR                    = 1;
     ROTARY_LOADER               = 2;
     PLOW_AND_BRUSH_MACHINE      = 3;
     PLOW_AND_BRUSH_MACHINE_REG  = 4;
-    HUMAN                       = 6;
+    HUMAN                       = 5;
 };
 
 message Coordinates {
@@ -40,3 +44,46 @@ message Coordinates {
     double lat      = 4;
     double long     = 5;
 };
+
+message Units {
+    repeated string ids = 1;
+};
+
+message Coords {
+    double lat      = 1;
+    double long     = 2;
+};
+
+message OpeataionOn {
+    Units units = 1;
+    Coords coords = 2;
+};
+
+message OperationFromTo {
+    Units units = 1;
+    Coords from = 2;
+    Coords to   = 3;
+};
+
+message Unit{
+    string id = 1;
+};
+
+message Operaions {
+    Coords from = 1;
+    Coords to   = 2;
+};
+
+service CoordsService {
+    rpc WriteCoords (WriteCoordsReq)        returns         (WriteCoordsResp);
+    rpc GetCoords   (Units)                 returns         (stream GetCoordsResp);
+    rpc UpdateUnits (UpdateUnitsReq)        returns         (UpdateUnitsResp);
+    rpc SweepingUp  (OpeataionOn)           returns         (Empty);
+    rpc ReagentTreatment (OpeataionOn)      returns         (Empty);
+    rpc ShaftFormation (OpeataionOn)        returns         (Empty);
+    rpc MoveSnowToTemp(OperationFromTo)     returns         (Empty);
+    rpc LoadingSnowFromTemp(OpeataionOn)    returns         (Empty);
+    rpc ExportSnowFromTemp(OperationFromTo) returns         (Empty);
+    rpc ClearTemp(OpeataionOn)              returns         (Empty);
+    rpc ListenCommands(Unit)               returns          (stream Operaions);
+}
