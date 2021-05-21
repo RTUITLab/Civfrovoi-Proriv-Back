@@ -1,15 +1,19 @@
 package app
 
 import (
-	pb "github.com/RTUITLab/Civfrovoi-Proriv-Back/protos/coordservice"
+	"time"
 	"fmt"
 	"net"
+
+	pb "github.com/RTUITLab/Civfrovoi-Proriv-Back/protos/coordservice"
 
 	"github.com/RTUITLab/Civfrovoi-Proriv-Back/pkg/config"
 	"github.com/RTUITLab/Civfrovoi-Proriv-Back/service/server"
 	"google.golang.org/grpc"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"github.com/jmoiron/sqlx"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type App struct {
@@ -27,7 +31,22 @@ func New(
 }
 
 func (a *App) Start() error {
-	db, err := gorm.Open(mysql.Open(a.DB_URI), &gorm.Config{})
+	sqlDB, err := connectOrWait("mysql", a.DB_URI, 45 *time.Second)
+	if err != nil {
+		return err
+	}
+
+	db, err := gorm.Open(
+		mysql.New(
+			mysql.Config{
+				Conn: sqlDB,
+			},
+		),
+		&gorm.Config{
+		
+		},
+	)
+
 	if err != nil {
 		panic(err)
 	}
@@ -53,4 +72,26 @@ func (a *App) Start() error {
 	}
 
 	return nil
+}
+
+func connectOrWait(driverName, URI string, WaitTime time.Duration) (*sqlx.DB, error) {
+	conn, err := sqlx.Connect(
+		driverName,
+		URI,
+	)
+	if err != nil {
+		for i := 0; i < int(WaitTime.Seconds()); i++ {
+			t := time.NewTimer(time.Second)
+			<-t.C
+			conn, err := sqlx.Connect(driverName, URI)
+			if err != nil {
+				continue
+			} else {
+				return conn, nil
+			}
+		}
+		return nil, err
+	}
+	return conn, nil
+
 }
