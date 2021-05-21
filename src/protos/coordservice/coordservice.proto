@@ -75,6 +75,10 @@ message Operaions {
     string operation_name   = 3;
 };
 
+message ID {
+    string id = 1;
+};
+
 service CoordsService {
     rpc WriteCoords (WriteCoordsReq)        returns         (WriteCoordsResp);
     rpc GetCoords   (Units)                 returns         (stream GetCoordsResp);
@@ -86,5 +90,6 @@ service CoordsService {
     rpc LoadingSnowFromTemp(OpeataionOn)    returns         (Empty);
     rpc ExportSnowFromTemp(OperationFromTo) returns         (Empty);
     rpc ClearTemp(OpeataionOn)              returns         (Empty);
-    rpc ListenCommands(Unit)                returns          (stream Operaions);
-}
+    rpc ListenCommands(Unit)                returns         (stream Operaions);
+    rpc InitApp(Empty)                      returns         (ID);
+};
