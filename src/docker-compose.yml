@@ -1,0 +1,32 @@
+version: "3.8"
+services: 
+    db:
+        image: mysql
+        container_name: db
+        restart: always
+        ports: 
+            - 3306:3306
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: docker
+          MYSQL_PASSWORD: docker
+        volumes:
+            - "wp-db:/var/lib/mysql:rw"
+        networks: 
+            - database
+    back:
+        build: "."
+        container_name: "back_end"
+        volumes: 
+            - ./.env:/root/.env
+        ports: 
+            - 8080:8080
+        networks: 
+            - database
+
+
+volumes: 
+    wp-db: {}
+networks: 
+    database:
+        driver: "bridge"
