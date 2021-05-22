@@ -16,6 +16,10 @@ import (
 	"gorm.io/gorm"
 )
 
+const (
+	DISPETCHER_QUEUE = "dispetcher_queue"
+)
+
 type Config struct {
 	GetCoordsTime	string
 }
@@ -27,8 +31,23 @@ type Server struct {
 	GetCoordTime	time.Duration
 }
 
-func New() *Server {
-	return &Server{}
+func New(
+	DB 				*gorm.DB,
+	RabbitConn		*amqp.Connection,
+	GetCoordTime	time.Duration,
+) *Server {
+	
+	s := &Server{
+		DB: DB,
+		RabbitConn: RabbitConn,
+		GetCoordTime: GetCoordTime,
+	}
+
+	if err := s.createQueueForID(DISPETCHER_QUEUE); err != nil {
+		log.Error("Failed to start Queue for dispethcer")
+	}
+
+	return s
 }
 
 func(s *Server)	WriteCoords(ctx context.Context, req *pb.WriteCoordsReq) (*pb.WriteCoordsResp, error) {
@@ -574,6 +593,103 @@ func(s *Server) InitApp(ctx context.Context, req *pb.InitReq) (*pb.ID, error) {
 	}
 
 	return &pb.ID{Id: uuid.String()}, nil
+}
+
+func (s *Server) OpenTask(ctx context.Context, req *pb.Task) (*pb.Empty, error) {
+	logger := prepareEntrty("OpenTask")
+
+	channel, err := s.RabbitConn.Channel()
+	if err != nil {
+		logger.Error(err)
+		return nil, status.Error(codes.Internal, "Faield to open task") 
+	}
+	defer channel.Close()
+	
+	data, err := json.Marshal(req)
+	if err != nil {
+		logger.Error("Faield to marshall messgae ", err)
+		return nil, status.Error(codes.Internal, "Faield to marshall messgae")
+	}
+
+	err = channel.Publish(
+		"",
+		DISPETCHER_QUEUE,
+		false,
+		false,
+		amqp.Publishing{
+			ContentType: "application/json",
+			Body: data,
+		},
+	)
+	if err != nil {
+		logger.Error("Failed to publish ", err)
+		return nil, status.Error(codes.Internal, "Faield to publish task")
+	}
+
+	return &pb.Empty{}, nil
+}
+
+func (s *Server) GetTask(ctx context.Context, req *pb.Empty) (*pb.Tasks, error) {
+	logger := prepareEntrty("OpenTask")
+	channel, err := s.RabbitConn.Channel()
+	if err != nil {
+		logger.Error(err)
+		return nil, status.Error(codes.Internal, "Faield to open task") 
+	}
+	defer channel.Close()
+
+	msgs, err := channel.Consume(
+		DISPETCHER_QUEUE,
+		"",
+		true,
+		false,
+		false,
+		false,
+		nil,
+	)
+
+	tasks := []*pb.Task{}
+	for i := 0; i < 10; i++ {
+		select {
+		case msg := <- msgs:
+			task := &pb.Task{}
+			if err := json.Unmarshal(msg.Body, task); err != nil {
+				logger.Error("Faield to unmarhsal: ", err)
+				continue
+			}
+			tasks = append(tasks, task)
+		case <- time.After(30*time.Millisecond):
+			logger.Info("Time after")
+			continue
+		}
+	}
+
+	return &pb.Tasks{Tasks: tasks}, nil
+}
+
+func (s *Server) createQueueForID(id string) error {
+	logger := prepareEntrty("createQueueForID")
+	channel, err := s.RabbitConn.Channel()
+	if err != nil {
+		logger.Error("Faield to create Queue: ", err)
+		return err
+	}
+	defer channel.Close()
+
+	_, err = channel.QueueDeclare(
+		id,
+		true,
+		false,
+		false,
+		true,
+		nil,
+	)
+	if err != nil {
+		logger.Error("Faield to create Queue: ", err)
+		return err
+	}
+	
+	return nil
 }
 
 func prepareEntrty(
