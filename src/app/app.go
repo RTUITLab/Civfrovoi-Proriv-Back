@@ -34,7 +34,7 @@ func New(
 }
 
 func (a *App) Start() error {
-	sqlDB, err := connectOrWait("mysql", a.DB_URI, 5 * time.Minute)
+	sqlDB, err := connectOrWait("mysql", a.DB_URI, 1 * time.Minute)
 	if err != nil {
 		return err
 	}
