@@ -932,3 +932,107 @@ class InitReq extends $pb.GeneratedMessage {
   void clearType() => clearField(1);
 }
 
+class Task extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Task', createEmptyInstance: create)
+    ..aOM<Coords>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'on', subBuilder: Coords.create)
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'operationName')
+    ..hasRequiredFields = false
+  ;
+
+  Task._() : super();
+  factory Task({
+    Coords? on,
+    $core.String? operationName,
+  }) {
+    final _result = create();
+    if (on != null) {
+      _result.on = on;
+    }
+    if (operationName != null) {
+      _result.operationName = operationName;
+    }
+    return _result;
+  }
+  factory Task.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Task.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  Task clone() => Task()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  Task copyWith(void Function(Task) updates) => super.copyWith((message) => updates(message as Task)) as Task; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static Task create() => Task._();
+  Task createEmptyInstance() => create();
+  static $pb.PbList<Task> createRepeated() => $pb.PbList<Task>();
+  @$core.pragma('dart2js:noInline')
+  static Task getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Task>(create);
+  static Task? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  Coords get on => $_getN(0);
+  @$pb.TagNumber(1)
+  set on(Coords v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasOn() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearOn() => clearField(1);
+  @$pb.TagNumber(1)
+  Coords ensureOn() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.String get operationName => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set operationName($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasOperationName() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOperationName() => clearField(2);
+}
+
+class Tasks extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Tasks', createEmptyInstance: create)
+    ..pc<Task>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'tasks', $pb.PbFieldType.PM, subBuilder: Task.create)
+    ..hasRequiredFields = false
+  ;
+
+  Tasks._() : super();
+  factory Tasks({
+    $core.Iterable<Task>? tasks,
+  }) {
+    final _result = create();
+    if (tasks != null) {
+      _result.tasks.addAll(tasks);
+    }
+    return _result;
+  }
+  factory Tasks.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Tasks.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  Tasks clone() => Tasks()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  Tasks copyWith(void Function(Tasks) updates) => super.copyWith((message) => updates(message as Tasks)) as Tasks; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static Tasks create() => Tasks._();
+  Tasks createEmptyInstance() => create();
+  static $pb.PbList<Tasks> createRepeated() => $pb.PbList<Tasks>();
+  @$core.pragma('dart2js:noInline')
+  static Tasks getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Tasks>(create);
+  static Tasks? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.List<Task> get tasks => $_getList(0);
+}
+

@@ -16,6 +16,7 @@ class Resuource extends $pb.ProtobufEnum {
   static const Resuource PLOW_AND_BRUSH_MACHINE = Resuource._(3, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'PLOW_AND_BRUSH_MACHINE');
   static const Resuource PLOW_AND_BRUSH_MACHINE_REG = Resuource._(4, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'PLOW_AND_BRUSH_MACHINE_REG');
   static const Resuource HUMAN = Resuource._(5, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'HUMAN');
+  static const Resuource DISPETCHER = Resuource._(6, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'DISPETCHER');
 
   static const $core.List<Resuource> values = <Resuource> [
     TRUCK,
@@ -24,6 +25,7 @@ class Resuource extends $pb.ProtobufEnum {
     PLOW_AND_BRUSH_MACHINE,
     PLOW_AND_BRUSH_MACHINE_REG,
     HUMAN,
+    DISPETCHER,
   ];
 
   static final $core.Map<$core.int, Resuource> _byValue = $pb.ProtobufEnum.initByValue(values);

@@ -70,6 +70,14 @@ class CoordsServiceClient extends $grpc.Client {
       '/CoordsService/InitApp',
       ($0.InitReq value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.ID.fromBuffer(value));
+  static final _$openTask = $grpc.ClientMethod<$0.Task, $0.Empty>(
+      '/CoordsService/OpenTask',
+      ($0.Task value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
+  static final _$getTask = $grpc.ClientMethod<$0.Empty, $0.Tasks>(
+      '/CoordsService/GetTask',
+      ($0.Empty value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Tasks.fromBuffer(value));
 
   CoordsServiceClient($grpc.ClientChannel channel,
       {$grpc.CallOptions? options,
@@ -140,6 +148,16 @@ class CoordsServiceClient extends $grpc.Client {
   $grpc.ResponseFuture<$0.ID> initApp($0.InitReq request,
       {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$initApp, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Empty> openTask($0.Task request,
+      {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$openTask, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Tasks> getTask($0.Empty request,
+      {$grpc.CallOptions? options}) {
+    return $createUnaryCall(_$getTask, request, options: options);
   }
 }
 
@@ -231,6 +249,20 @@ abstract class CoordsServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.InitReq.fromBuffer(value),
         ($0.ID value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Task, $0.Empty>(
+        'OpenTask',
+        openTask_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Task.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Empty, $0.Tasks>(
+        'GetTask',
+        getTask_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($0.Tasks value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.WriteCoordsResp> writeCoords_Pre(
@@ -293,6 +325,16 @@ abstract class CoordsServiceBase extends $grpc.Service {
     return initApp(call, await request);
   }
 
+  $async.Future<$0.Empty> openTask_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.Task> request) async {
+    return openTask(call, await request);
+  }
+
+  $async.Future<$0.Tasks> getTask_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.Empty> request) async {
+    return getTask(call, await request);
+  }
+
   $async.Future<$0.WriteCoordsResp> writeCoords(
       $grpc.ServiceCall call, $0.WriteCoordsReq request);
   $async.Stream<$0.GetCoordsResp> getCoords(
@@ -316,4 +358,6 @@ abstract class CoordsServiceBase extends $grpc.Service {
   $async.Stream<$0.Operaions> listenCommands(
       $grpc.ServiceCall call, $0.Unit request);
   $async.Future<$0.ID> initApp($grpc.ServiceCall call, $0.InitReq request);
+  $async.Future<$0.Empty> openTask($grpc.ServiceCall call, $0.Task request);
+  $async.Future<$0.Tasks> getTask($grpc.ServiceCall call, $0.Empty request);
 }

@@ -18,11 +18,12 @@ const Resuource$json = const {
     const {'1': 'PLOW_AND_BRUSH_MACHINE', '2': 3},
     const {'1': 'PLOW_AND_BRUSH_MACHINE_REG', '2': 4},
     const {'1': 'HUMAN', '2': 5},
+    const {'1': 'DISPETCHER', '2': 6},
   ],
 };
 
 /// Descriptor for `Resuource`. Decode as a `google.protobuf.EnumDescriptorProto`.
-final $typed_data.Uint8List resuourceDescriptor = $convert.base64Decode('CglSZXN1b3VyY2USCQoFVFJVQ0sQABIMCghFQ0FWQVRPUhABEhEKDVJPVEFSWV9MT0FERVIQAhIaChZQTE9XX0FORF9CUlVTSF9NQUNISU5FEAMSHgoaUExPV19BTkRfQlJVU0hfTUFDSElORV9SRUcQBBIJCgVIVU1BThAF');
+final $typed_data.Uint8List resuourceDescriptor = $convert.base64Decode('CglSZXN1b3VyY2USCQoFVFJVQ0sQABIMCghFQ0FWQVRPUhABEhEKDVJPVEFSWV9MT0FERVIQAhIaChZQTE9XX0FORF9CUlVTSF9NQUNISU5FEAMSHgoaUExPV19BTkRfQlJVU0hfTUFDSElORV9SRUcQBBIJCgVIVU1BThAFEg4KCkRJU1BFVENIRVIQBg==');
 @$core.Deprecated('Use writeCoordsReqDescriptor instead')
 const WriteCoordsReq$json = const {
   '1': 'WriteCoordsReq',
@@ -197,3 +198,24 @@ const InitReq$json = const {
 
 /// Descriptor for `InitReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List initReqDescriptor = $convert.base64Decode('CgdJbml0UmVxEh4KBHR5cGUYASABKA4yCi5SZXN1b3VyY2VSBHR5cGU=');
+@$core.Deprecated('Use taskDescriptor instead')
+const Task$json = const {
+  '1': 'Task',
+  '2': const [
+    const {'1': 'on', '3': 1, '4': 1, '5': 11, '6': '.Coords', '10': 'on'},
+    const {'1': 'operation_name', '3': 2, '4': 1, '5': 9, '10': 'operationName'},
+  ],
+};
+
+/// Descriptor for `Task`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List taskDescriptor = $convert.base64Decode('CgRUYXNrEhcKAm9uGAEgASgLMgcuQ29vcmRzUgJvbhIlCg5vcGVyYXRpb25fbmFtZRgCIAEoCVINb3BlcmF0aW9uTmFtZQ==');
+@$core.Deprecated('Use tasksDescriptor instead')
+const Tasks$json = const {
+  '1': 'Tasks',
+  '2': const [
+    const {'1': 'tasks', '3': 1, '4': 3, '5': 11, '6': '.Task', '10': 'tasks'},
+  ],
+};
+
+/// Descriptor for `Tasks`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List tasksDescriptor = $convert.base64Decode('CgVUYXNrcxIbCgV0YXNrcxgBIAMoCzIFLlRhc2tSBXRhc2tz');
