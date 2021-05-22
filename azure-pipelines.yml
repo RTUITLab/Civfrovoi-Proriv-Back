@@ -1,0 +1,73 @@
+name: $(BuildID)-$(Build.SourceBranchName)
+
+resources:
+- repo: self
+
+variables:
+  tag: '$(Build.BuildId)'
+  CGO_ENABLED: 0
+  GOOS: linux
+  imageTags: |
+    $(Build.BuildId)
+    latest
+  serviceName: cifrovoy-proryv_go-back
+
+stages:
+- stage: Build
+  displayName: Build image
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: Go@0
+      displayName: build
+      inputs:
+        command: 'build'
+        arguments: '-a -installsuffix cgo -o $(Build.ArtifactStagingDirectory)/main -v'
+        workingDirectory: 'src'
+    - task: CopyFiles@2
+      inputs:
+        SourceFolder: 'deploy'
+        Contents: 'Dockerfile'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+        OverWrite: true
+    - publish: $(Build.ArtifactStagingDirectory)
+      artifact: itlab-cifrovoy-proryv-build
+- stage: buildImage
+  condition: succeeded()
+  displayName: Pack docker image
+  jobs:
+  - job: build
+    displayName: Build
+    steps:
+    - download: current
+      artifact: itlab-cifrovoy-proryv-build
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'rtuitlab connection by admin'
+        repository: 'rtuitlab/itlab-cifrovoy-proryv-go-back'
+        command: 'buildAndPush'
+        Dockerfile: '$(Pipeline.Workspace)/cifrovoy-proryv-build/Dockerfile'
+        buildContext: '$(Pipeline.Workspace)/cifrovoy-proryv-build'
+        tags: ${{variables.ImageTags}}
+- stage: deploy
+  displayName: Deploy
+  condition: succeeded()
+  jobs:
+    - deployment: Deploy
+      pool:
+        vmImage: 'ubuntu-latest'
+      environment: production
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - download: none
+              - task: SSH@0
+                inputs:
+                  sshEndpoint: 'swarm manager'
+                  runOptions: 'commands'
+                  commands: 'docker service update --image rtuitlab/itlab-cifrovoy-proryv-go-back:$(Build.BuildId) ${{variables.serviceName}} --with-registry-auth'
+                  readyTimeout: '20000'

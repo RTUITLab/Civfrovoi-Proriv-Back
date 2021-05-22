@@ -24,9 +24,10 @@ services:
         networks: 
             - database
             - dev-network
-    message-broker:
+        restart: always
+    message_broker:
         image: rabbitmq:3-management-alpine
-        container_name: message-broker
+        container_name: message_broker
         ports:
             - 5672:5672   # for sender and consumer connections
             - 15672:15672 # for serve RabbitMQ GUI

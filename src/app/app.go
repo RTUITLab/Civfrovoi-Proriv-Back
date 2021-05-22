@@ -1,20 +1,20 @@
 package app
 
 import (
-	"time"
 	"fmt"
 	"net"
+	"time"
 
 	pb "github.com/RTUITLab/Civfrovoi-Proriv-Back/protos/coordservice"
 
 	"github.com/RTUITLab/Civfrovoi-Proriv-Back/pkg/config"
 	"github.com/RTUITLab/Civfrovoi-Proriv-Back/service/server"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
+	rabbit "github.com/streadway/amqp"
 	"google.golang.org/grpc"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"github.com/jmoiron/sqlx"
-	_ "github.com/go-sql-driver/mysql"
-	rabbit "github.com/streadway/amqp"
 )
 
 type App struct {
@@ -107,7 +107,9 @@ func connectOrWait(driverName, URI string, WaitTime time.Duration) (*sqlx.DB, er
 }
 
 func connToAMPQ(AMPQ_URI string) (*rabbit.Connection, error) {
-	conn, err := rabbit.Dial(AMPQ_URI)
+	conn, err := rabbit.Dial(
+		AMPQ_URI,
+	)
 	if err != nil {
 		return nil, err
 	}
