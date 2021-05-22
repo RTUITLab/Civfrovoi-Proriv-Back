@@ -230,7 +230,7 @@ func TestFunc_ListenCommand(t *testing.T) {
 				context.Background(),
 				&pb.OpeataionOn{
 					Units: &pb.Units{
-						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
+						Ids: []string{"1suBeuep3uySyjYV746IOYw9rjDx"},
 					},
 					Coords: &pb.Coords{
 						Lat:  10,
@@ -243,7 +243,7 @@ func TestFunc_ListenCommand(t *testing.T) {
 				context.Background(),
 				&pb.OperationFromTo{
 					Units: &pb.Units{
-						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
+						Ids: []string{"1suAwDZ3WyaZsHbgZmabTB6gxa8"},
 					},
 					From: &pb.Coords{
 						Lat:  9,
@@ -260,7 +260,7 @@ func TestFunc_ListenCommand(t *testing.T) {
 				context.Background(),
 				&pb.OpeataionOn{
 					Units: &pb.Units{
-						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
+						Ids: []string{"1suAwDZ3WyaZsHbgZmabTB6gxa8"},
 					},
 					Coords: &pb.Coords{
 						Lat:  13,
@@ -273,7 +273,7 @@ func TestFunc_ListenCommand(t *testing.T) {
 				context.Background(),
 				&pb.OperationFromTo{
 					Units: &pb.Units{
-						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
+						Ids: []string{"1suAwDZ3WyaZsHbgZmabTB6gxa8"},
 					},
 					From: &pb.Coords{
 						Lat:  9,
@@ -290,7 +290,7 @@ func TestFunc_ListenCommand(t *testing.T) {
 				context.Background(),
 				&pb.OpeataionOn{
 					Units: &pb.Units{
-						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
+						Ids: []string{"1suAwDZ3WyaZsHbgZmabTB6gxa8"},
 					},
 					Coords: &pb.Coords{
 						Lat:  13,
@@ -303,7 +303,7 @@ func TestFunc_ListenCommand(t *testing.T) {
 				context.Background(),
 				&pb.OpeataionOn{
 					Units: &pb.Units{
-						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
+						Ids: []string{"1suAwDZ3WyaZsHbgZmabTB6gxa8"},
 					},
 					Coords: &pb.Coords{
 						Lat:  13,
@@ -316,7 +316,7 @@ func TestFunc_ListenCommand(t *testing.T) {
 				context.Background(),
 				&pb.OpeataionOn{
 					Units: &pb.Units{
-						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
+						Ids: []string{"1suAwDZ3WyaZsHbgZmabTB6gxa8"},
 					},
 					Coords: &pb.Coords{
 						Lat:  13,
@@ -327,32 +327,12 @@ func TestFunc_ListenCommand(t *testing.T) {
 		}
 	}()
 
-	ctx, cancel := context.WithTimeout(
-		context.Background(),
-		25*time.Second,
-	)
-	defer cancel()
-
-	cmds, err := client.ListenCommands(
-		ctx,
-		&pb.Unit{
-			Id: "1srJx0G8gmTEO9GrldnSbkCPT0U",
-		},
-	)
-	for {
-		op, err := cmds.Recv()
-		if err != nil {
-			t.Log(err)
-			t.FailNow()
-		}
-
-		t.Log(op.String())
-	}
+	time.Sleep(4 * time.Second)
 
 }
 
 func TestFunc_OpenTask(t *testing.T) {
-	conn, err := grpc.Dial("127.0.0.1:8080", grpc.WithInsecure())
+	conn, err := grpc.Dial("82.146.61.131:8081", grpc.WithInsecure())
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -380,7 +360,7 @@ func TestFunc_OpenTask(t *testing.T) {
 }
 
 func TestFunc_GetTasks(t *testing.T) {
-	conn, err := grpc.Dial("127.0.0.1:8080", grpc.WithInsecure())
+	conn, err := grpc.Dial("82.146.61.131:8081", grpc.WithInsecure())
 	if err != nil {
 		t.Log(err)
 		t.FailNow()

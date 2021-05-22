@@ -19,18 +19,30 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type CoordsServiceClient interface {
 	WriteCoords(ctx context.Context, in *WriteCoordsReq, opts ...grpc.CallOption) (*WriteCoordsResp, error)
+	// For unity
 	GetCoords(ctx context.Context, in *Units, opts ...grpc.CallOption) (CoordsService_GetCoordsClient, error)
+	// For unity
 	UpdateUnits(ctx context.Context, in *UpdateUnitsReq, opts ...grpc.CallOption) (*UpdateUnitsResp, error)
+	// For unity
 	SweepingUp(ctx context.Context, in *OpeataionOn, opts ...grpc.CallOption) (*Empty, error)
+	// For unity
 	ReagentTreatment(ctx context.Context, in *OpeataionOn, opts ...grpc.CallOption) (*Empty, error)
+	// For unity
 	ShaftFormation(ctx context.Context, in *OpeataionOn, opts ...grpc.CallOption) (*Empty, error)
+	// For unity
 	MoveSnowToTemp(ctx context.Context, in *OperationFromTo, opts ...grpc.CallOption) (*Empty, error)
+	// For unity
 	LoadingSnowFromTemp(ctx context.Context, in *OpeataionOn, opts ...grpc.CallOption) (*Empty, error)
+	// For unity
 	ExportSnowFromTemp(ctx context.Context, in *OperationFromTo, opts ...grpc.CallOption) (*Empty, error)
+	// For unity
 	ClearTemp(ctx context.Context, in *OpeataionOn, opts ...grpc.CallOption) (*Empty, error)
+	// For unity
 	ListenCommands(ctx context.Context, in *Unit, opts ...grpc.CallOption) (CoordsService_ListenCommandsClient, error)
+	// For unity
 	InitApp(ctx context.Context, in *InitReq, opts ...grpc.CallOption) (*ID, error)
 	OpenTask(ctx context.Context, in *Task, opts ...grpc.CallOption) (*Empty, error)
+	// For unity
 	GetTask(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Tasks, error)
 }
 
@@ -215,27 +227,38 @@ func (c *coordsServiceClient) GetTask(ctx context.Context, in *Empty, opts ...gr
 }
 
 // CoordsServiceServer is the server API for CoordsService service.
-// All implementations must embed UnimplementedCoordsServiceServer
+// All implementations should embed UnimplementedCoordsServiceServer
 // for forward compatibility
 type CoordsServiceServer interface {
 	WriteCoords(context.Context, *WriteCoordsReq) (*WriteCoordsResp, error)
+	// For unity
 	GetCoords(*Units, CoordsService_GetCoordsServer) error
+	// For unity
 	UpdateUnits(context.Context, *UpdateUnitsReq) (*UpdateUnitsResp, error)
+	// For unity
 	SweepingUp(context.Context, *OpeataionOn) (*Empty, error)
+	// For unity
 	ReagentTreatment(context.Context, *OpeataionOn) (*Empty, error)
+	// For unity
 	ShaftFormation(context.Context, *OpeataionOn) (*Empty, error)
+	// For unity
 	MoveSnowToTemp(context.Context, *OperationFromTo) (*Empty, error)
+	// For unity
 	LoadingSnowFromTemp(context.Context, *OpeataionOn) (*Empty, error)
+	// For unity
 	ExportSnowFromTemp(context.Context, *OperationFromTo) (*Empty, error)
+	// For unity
 	ClearTemp(context.Context, *OpeataionOn) (*Empty, error)
+	// For unity
 	ListenCommands(*Unit, CoordsService_ListenCommandsServer) error
+	// For unity
 	InitApp(context.Context, *InitReq) (*ID, error)
 	OpenTask(context.Context, *Task) (*Empty, error)
+	// For unity
 	GetTask(context.Context, *Empty) (*Tasks, error)
-	mustEmbedUnimplementedCoordsServiceServer()
 }
 
-// UnimplementedCoordsServiceServer must be embedded to have forward compatible implementations.
+// UnimplementedCoordsServiceServer should be embedded to have forward compatible implementations.
 type UnimplementedCoordsServiceServer struct {
 }
 
@@ -281,7 +304,6 @@ func (UnimplementedCoordsServiceServer) OpenTask(context.Context, *Task) (*Empty
 func (UnimplementedCoordsServiceServer) GetTask(context.Context, *Empty) (*Tasks, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTask not implemented")
 }
-func (UnimplementedCoordsServiceServer) mustEmbedUnimplementedCoordsServiceServer() {}
 
 // UnsafeCoordsServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to CoordsServiceServer will
@@ -620,5 +642,5 @@ var CoordsService_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "src/protos/coordservice/coordservice.proto",
+	Metadata: "coordservice/coordservice.proto",
 }

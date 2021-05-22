@@ -80,7 +80,6 @@ func (a *App) Start() error {
 		grpcServer,
 		Server,
 	)
-
 	if err := grpcServer.Serve(lis); err != nil {
 		return err
 	}

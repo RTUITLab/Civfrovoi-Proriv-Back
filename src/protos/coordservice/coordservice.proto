@@ -1,5 +1,6 @@
 syntax = "proto3";
-
+import "google/api/annotations.proto";
+option go_package = "github.com/RTUITLab/Civfrovoi-Proriv-Back/protos;coordservice";
 message WriteCoordsReq {
     string id   = 1;
     double lat  = 2;
@@ -98,17 +99,33 @@ message Tasks {
 
 service CoordsService {
     rpc WriteCoords (WriteCoordsReq)        returns         (WriteCoordsResp);
-    rpc GetCoords   (Units)                 returns         (stream GetCoordsResp);
+    // For unity
+    rpc GetCoords   (Units)                 returns         (stream GetCoordsResp){
+        option (google.api.http) = {
+                get: "/coords"
+            };
+    };
+    // For unity
     rpc UpdateUnits (UpdateUnitsReq)        returns         (UpdateUnitsResp);
+    // For unity
     rpc SweepingUp  (OpeataionOn)           returns         (Empty);
+    // For unity
     rpc ReagentTreatment (OpeataionOn)      returns         (Empty);
+    // For unity
     rpc ShaftFormation (OpeataionOn)        returns         (Empty);
+    // For unity
     rpc MoveSnowToTemp(OperationFromTo)     returns         (Empty);
+    // For unity
     rpc LoadingSnowFromTemp(OpeataionOn)    returns         (Empty);
+    // For unity
     rpc ExportSnowFromTemp(OperationFromTo) returns         (Empty);
+    // For unity
     rpc ClearTemp(OpeataionOn)              returns         (Empty);
+    // For unity
     rpc ListenCommands(Unit)                returns         (stream Operaions);
+    // For unity
     rpc InitApp(InitReq)                    returns         (ID);
     rpc OpenTask(Task)                      returns         (Empty);
+    // For unity
     rpc GetTask(Empty)                      returns         (Tasks);
 };
