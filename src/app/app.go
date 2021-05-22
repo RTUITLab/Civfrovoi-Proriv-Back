@@ -14,11 +14,13 @@ import (
 	"gorm.io/gorm"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/go-sql-driver/mysql"
+	rabbit "github.com/streadway/amqp"
 )
 
 type App struct {
 	Port 		string
 	DB_URI		string
+	AMPQ_URL	string
 }
 
 func New(
@@ -27,6 +29,7 @@ func New(
 	return &App{
 		Port: cfg.App.Port,
 		DB_URI: cfg.DB.URI,
+		AMPQ_URL: cfg.RabbitMQ.URL,
 	}
 }
 
@@ -51,9 +54,15 @@ func (a *App) Start() error {
 		panic(err)
 	}
 
+	rabbitConn, err := connToAMPQ(a.AMPQ_URL)
+	if err != nil {
+		return err
+	}
+
 	Server := &server.Server{
 		DB: db,
 		GetCoordTime: time.Second,
+		RabbitConn: rabbitConn,
 	}
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", a.Port))
@@ -95,4 +104,13 @@ func connectOrWait(driverName, URI string, WaitTime time.Duration) (*sqlx.DB, er
 	}
 	return conn, nil
 
+}
+
+func connToAMPQ(AMPQ_URI string) (*rabbit.Connection, error) {
+	conn, err := rabbit.Dial(AMPQ_URI)
+	if err != nil {
+		return nil, err
+	}
+
+	return conn, nil
 }
