@@ -65,6 +65,28 @@ var client *pb.CoordsServiceClient
 
 func TestFunc_Init(t *testing.T) {
 	t.Log("Init")
+	conn, err := grpc.Dial("82.146.61.131:8081", grpc.WithInsecure())
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	defer conn.Close()
+
+	client := pb.NewCoordsServiceClient(conn)
+
+	id, err := client.InitApp(
+		context.Background(),
+		&pb.InitReq{
+			Type: pb.Resuource_HUMAN,
+		},
+	)
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	t.Log(id)
 }
 
 func TestFunc_WriteCoords(t *testing.T) {
@@ -192,7 +214,7 @@ func TestFunc_SweepingUp(t *testing.T) {
 }
 
 func TestFunc_ListenCommand(t *testing.T) {
-	conn, err := grpc.Dial("127.0.0.1:8080", grpc.WithInsecure())
+	conn, err := grpc.Dial("82.146.61.131:8081", grpc.WithInsecure())
 	if err != nil {
 		t.Log(err)
 		t.FailNow()
@@ -211,7 +233,7 @@ func TestFunc_ListenCommand(t *testing.T) {
 						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
 					},
 					Coords: &pb.Coords{
-						Lat: 10,
+						Lat:  10,
 						Long: 20,
 					},
 				},
@@ -224,11 +246,11 @@ func TestFunc_ListenCommand(t *testing.T) {
 						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
 					},
 					From: &pb.Coords{
-						Lat: 9,
+						Lat:  9,
 						Long: 17,
 					},
 					To: &pb.Coords{
-						Lat: 7,
+						Lat:  7,
 						Long: 12,
 					},
 				},
@@ -241,7 +263,7 @@ func TestFunc_ListenCommand(t *testing.T) {
 						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
 					},
 					Coords: &pb.Coords{
-						Lat: 13,
+						Lat:  13,
 						Long: 207,
 					},
 				},
@@ -254,11 +276,11 @@ func TestFunc_ListenCommand(t *testing.T) {
 						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
 					},
 					From: &pb.Coords{
-						Lat: 9,
+						Lat:  9,
 						Long: 17,
 					},
 					To: &pb.Coords{
-						Lat: 7,
+						Lat:  7,
 						Long: 12,
 					},
 				},
@@ -271,7 +293,7 @@ func TestFunc_ListenCommand(t *testing.T) {
 						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
 					},
 					Coords: &pb.Coords{
-						Lat: 13,
+						Lat:  13,
 						Long: 207,
 					},
 				},
@@ -284,7 +306,7 @@ func TestFunc_ListenCommand(t *testing.T) {
 						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
 					},
 					Coords: &pb.Coords{
-						Lat: 13,
+						Lat:  13,
 						Long: 207,
 					},
 				},
@@ -297,7 +319,7 @@ func TestFunc_ListenCommand(t *testing.T) {
 						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
 					},
 					Coords: &pb.Coords{
-						Lat: 13,
+						Lat:  13,
 						Long: 207,
 					},
 				},
@@ -327,5 +349,59 @@ func TestFunc_ListenCommand(t *testing.T) {
 		t.Log(op.String())
 	}
 
-	
+}
+
+func TestFunc_OpenTask(t *testing.T) {
+	conn, err := grpc.Dial("127.0.0.1:8080", grpc.WithInsecure())
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	defer conn.Close()
+
+	client := pb.NewCoordsServiceClient(conn)
+
+	_, err = client.OpenTask(
+		context.Background(),
+		&pb.Task{
+			On: &pb.Coords{
+				Lat:  20,
+				Long: 15,
+			},
+			OperationName: "Почисти снег 41792",
+		},
+	)
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+}
+
+func TestFunc_GetTasks(t *testing.T) {
+	conn, err := grpc.Dial("127.0.0.1:8080", grpc.WithInsecure())
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	defer conn.Close()
+
+	client := pb.NewCoordsServiceClient(conn)
+
+	tasks, err := client.GetTask(
+		context.Background(),
+		&pb.Empty{},
+	)
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+	t.Log(len(tasks.Tasks))
+
+	for _, task := range tasks.Tasks {
+		t.Log(task.String())
+	}
+
 }
