@@ -3,7 +3,6 @@ package server_test
 import (
 	"context"
 
-
 	"testing"
 	"time"
 
@@ -126,7 +125,6 @@ func TestFunc_GetCoords(t *testing.T) {
 			t.FailNow()
 		}
 		t.Log("Recived")
-		
 
 		t.Log(c.String())
 		if count == 100 {
@@ -163,16 +161,169 @@ func TestFunc_UpdateUnits(t *testing.T) {
 	}
 }
 
-func TestFunc(t *testing.T) {
-	d := 2 * time.Second
-	timer := time.NewTimer(d)
-	for {
-		select{
-		case <-timer.C:
-			timer.Stop()
-			t.Log("Time")
-			time.Sleep(time.Second)
-			timer.Reset(d)
+func TestFunc_SweepingUp(t *testing.T) {
+	conn, err := grpc.Dial("127.0.0.1:8080", grpc.WithInsecure())
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	defer conn.Close()
+
+	client := pb.NewCoordsServiceClient(conn)
+
+	_, err = client.SweepingUp(
+		context.Background(),
+		&pb.OpeataionOn{
+			Units: &pb.Units{
+				Ids: []string{"1srIn1j3TryJBp2jdSmymjpkNjK", "1srJx0G8gmTEO9GrldnSbkCPT0U"},
+			},
+			Coords: &pb.Coords{
+				Lat:  20,
+				Long: 20,
+			},
+		},
+	)
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+}
+
+func TestFunc_ListenCommand(t *testing.T) {
+	conn, err := grpc.Dial("127.0.0.1:8080", grpc.WithInsecure())
+	if err != nil {
+		t.Log(err)
+		t.FailNow()
+	}
+
+	defer conn.Close()
+
+	client := pb.NewCoordsServiceClient(conn)
+
+	go func() {
+		for {
+			client.ClearTemp(
+				context.Background(),
+				&pb.OpeataionOn{
+					Units: &pb.Units{
+						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
+					},
+					Coords: &pb.Coords{
+						Lat: 10,
+						Long: 20,
+					},
+				},
+			)
+
+			client.ExportSnowFromTemp(
+				context.Background(),
+				&pb.OperationFromTo{
+					Units: &pb.Units{
+						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
+					},
+					From: &pb.Coords{
+						Lat: 9,
+						Long: 17,
+					},
+					To: &pb.Coords{
+						Lat: 7,
+						Long: 12,
+					},
+				},
+			)
+
+			client.LoadingSnowFromTemp(
+				context.Background(),
+				&pb.OpeataionOn{
+					Units: &pb.Units{
+						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
+					},
+					Coords: &pb.Coords{
+						Lat: 13,
+						Long: 207,
+					},
+				},
+			)
+
+			client.MoveSnowToTemp(
+				context.Background(),
+				&pb.OperationFromTo{
+					Units: &pb.Units{
+						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
+					},
+					From: &pb.Coords{
+						Lat: 9,
+						Long: 17,
+					},
+					To: &pb.Coords{
+						Lat: 7,
+						Long: 12,
+					},
+				},
+			)
+
+			client.ReagentTreatment(
+				context.Background(),
+				&pb.OpeataionOn{
+					Units: &pb.Units{
+						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
+					},
+					Coords: &pb.Coords{
+						Lat: 13,
+						Long: 207,
+					},
+				},
+			)
+
+			client.ShaftFormation(
+				context.Background(),
+				&pb.OpeataionOn{
+					Units: &pb.Units{
+						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
+					},
+					Coords: &pb.Coords{
+						Lat: 13,
+						Long: 207,
+					},
+				},
+			)
+
+			client.SweepingUp(
+				context.Background(),
+				&pb.OpeataionOn{
+					Units: &pb.Units{
+						Ids: []string{"1srJx0G8gmTEO9GrldnSbkCPT0U"},
+					},
+					Coords: &pb.Coords{
+						Lat: 13,
+						Long: 207,
+					},
+				},
+			)
 		}
+	}()
+
+	ctx, cancel := context.WithTimeout(
+		context.Background(),
+		25*time.Second,
+	)
+	defer cancel()
+
+	cmds, err := client.ListenCommands(
+		ctx,
+		&pb.Unit{
+			Id: "1srJx0G8gmTEO9GrldnSbkCPT0U",
+		},
+	)
+	for {
+		op, err := cmds.Recv()
+		if err != nil {
+			t.Log(err)
+			t.FailNow()
+		}
+
+		t.Log(op.String())
 	}
 }
