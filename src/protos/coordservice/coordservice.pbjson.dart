@@ -63,14 +63,12 @@ final $typed_data.Uint8List getCoordsReqDescriptor = $convert.base64Decode('CgxH
 const GetCoordsResp$json = const {
   '1': 'GetCoordsResp',
   '2': const [
-    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
-    const {'1': 'lat', '3': 2, '4': 1, '5': 1, '10': 'lat'},
-    const {'1': 'long', '3': 3, '4': 1, '5': 1, '10': 'long'},
+    const {'1': 'coords', '3': 1, '4': 3, '5': 11, '6': '.UnitWithCords', '10': 'coords'},
   ],
 };
 
 /// Descriptor for `GetCoordsResp`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List getCoordsRespDescriptor = $convert.base64Decode('Cg1HZXRDb29yZHNSZXNwEg4KAmlkGAEgASgJUgJpZBIQCgNsYXQYAiABKAFSA2xhdBISCgRsb25nGAMgASgBUgRsb25n');
+final $typed_data.Uint8List getCoordsRespDescriptor = $convert.base64Decode('Cg1HZXRDb29yZHNSZXNwEiYKBmNvb3JkcxgBIAMoCzIOLlVuaXRXaXRoQ29yZHNSBmNvb3Jkcw==');
 @$core.Deprecated('Use updateUnitsReqDescriptor instead')
 const UpdateUnitsReq$json = const {
   '1': 'UpdateUnitsReq',
@@ -156,6 +154,17 @@ const Unit$json = const {
 
 /// Descriptor for `Unit`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List unitDescriptor = $convert.base64Decode('CgRVbml0Eg4KAmlkGAEgASgJUgJpZA==');
+@$core.Deprecated('Use unitWithCordsDescriptor instead')
+const UnitWithCords$json = const {
+  '1': 'UnitWithCords',
+  '2': const [
+    const {'1': 'id', '3': 1, '4': 1, '5': 9, '10': 'id'},
+    const {'1': 'coords', '3': 2, '4': 1, '5': 11, '6': '.Coords', '10': 'coords'},
+  ],
+};
+
+/// Descriptor for `UnitWithCords`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List unitWithCordsDescriptor = $convert.base64Decode('Cg1Vbml0V2l0aENvcmRzEg4KAmlkGAEgASgJUgJpZBIfCgZjb29yZHMYAiABKAsyBy5Db29yZHNSBmNvb3Jkcw==');
 @$core.Deprecated('Use operaionsDescriptor instead')
 const Operaions$json = const {
   '1': 'Operaions',
@@ -178,3 +187,13 @@ const ID$json = const {
 
 /// Descriptor for `ID`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List iDDescriptor = $convert.base64Decode('CgJJRBIOCgJpZBgBIAEoCVICaWQ=');
+@$core.Deprecated('Use initReqDescriptor instead')
+const InitReq$json = const {
+  '1': 'InitReq',
+  '2': const [
+    const {'1': 'type', '3': 1, '4': 1, '5': 14, '6': '.Resuource', '10': 'type'},
+  ],
+};
+
+/// Descriptor for `InitReq`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List initReqDescriptor = $convert.base64Decode('CgdJbml0UmVxEh4KBHR5cGUYASABKA4yCi5SZXN1b3VyY2VSBHR5cGU=');

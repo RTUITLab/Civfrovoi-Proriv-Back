@@ -189,27 +189,17 @@ class GetCoordsReq extends $pb.GeneratedMessage {
 
 class GetCoordsResp extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'GetCoordsResp', createEmptyInstance: create)
-    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
-    ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'lat', $pb.PbFieldType.OD)
-    ..a<$core.double>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'long', $pb.PbFieldType.OD)
+    ..pc<UnitWithCords>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'coords', $pb.PbFieldType.PM, subBuilder: UnitWithCords.create)
     ..hasRequiredFields = false
   ;
 
   GetCoordsResp._() : super();
   factory GetCoordsResp({
-    $core.String? id,
-    $core.double? lat,
-    $core.double? long,
+    $core.Iterable<UnitWithCords>? coords,
   }) {
     final _result = create();
-    if (id != null) {
-      _result.id = id;
-    }
-    if (lat != null) {
-      _result.lat = lat;
-    }
-    if (long != null) {
-      _result.long = long;
+    if (coords != null) {
+      _result.coords.addAll(coords);
     }
     return _result;
   }
@@ -235,31 +225,7 @@ class GetCoordsResp extends $pb.GeneratedMessage {
   static GetCoordsResp? _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get id => $_getSZ(0);
-  @$pb.TagNumber(1)
-  set id($core.String v) { $_setString(0, v); }
-  @$pb.TagNumber(1)
-  $core.bool hasId() => $_has(0);
-  @$pb.TagNumber(1)
-  void clearId() => clearField(1);
-
-  @$pb.TagNumber(2)
-  $core.double get lat => $_getN(1);
-  @$pb.TagNumber(2)
-  set lat($core.double v) { $_setDouble(1, v); }
-  @$pb.TagNumber(2)
-  $core.bool hasLat() => $_has(1);
-  @$pb.TagNumber(2)
-  void clearLat() => clearField(2);
-
-  @$pb.TagNumber(3)
-  $core.double get long => $_getN(2);
-  @$pb.TagNumber(3)
-  set long($core.double v) { $_setDouble(2, v); }
-  @$pb.TagNumber(3)
-  $core.bool hasLong() => $_has(2);
-  @$pb.TagNumber(3)
-  void clearLong() => clearField(3);
+  $core.List<UnitWithCords> get coords => $_getList(0);
 }
 
 class UpdateUnitsReq extends $pb.GeneratedMessage {
@@ -730,6 +696,69 @@ class Unit extends $pb.GeneratedMessage {
   void clearId() => clearField(1);
 }
 
+class UnitWithCords extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'UnitWithCords', createEmptyInstance: create)
+    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
+    ..aOM<Coords>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'coords', subBuilder: Coords.create)
+    ..hasRequiredFields = false
+  ;
+
+  UnitWithCords._() : super();
+  factory UnitWithCords({
+    $core.String? id,
+    Coords? coords,
+  }) {
+    final _result = create();
+    if (id != null) {
+      _result.id = id;
+    }
+    if (coords != null) {
+      _result.coords = coords;
+    }
+    return _result;
+  }
+  factory UnitWithCords.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory UnitWithCords.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  UnitWithCords clone() => UnitWithCords()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  UnitWithCords copyWith(void Function(UnitWithCords) updates) => super.copyWith((message) => updates(message as UnitWithCords)) as UnitWithCords; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static UnitWithCords create() => UnitWithCords._();
+  UnitWithCords createEmptyInstance() => create();
+  static $pb.PbList<UnitWithCords> createRepeated() => $pb.PbList<UnitWithCords>();
+  @$core.pragma('dart2js:noInline')
+  static UnitWithCords getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<UnitWithCords>(create);
+  static UnitWithCords? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get id => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set id($core.String v) { $_setString(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => clearField(1);
+
+  @$pb.TagNumber(2)
+  Coords get coords => $_getN(1);
+  @$pb.TagNumber(2)
+  set coords(Coords v) { setField(2, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasCoords() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearCoords() => clearField(2);
+  @$pb.TagNumber(2)
+  Coords ensureCoords() => $_ensure(1);
+}
+
 class Operaions extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Operaions', createEmptyInstance: create)
     ..aOM<Coords>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'from', subBuilder: Coords.create)
@@ -854,5 +883,52 @@ class ID extends $pb.GeneratedMessage {
   $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
   void clearId() => clearField(1);
+}
+
+class InitReq extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'InitReq', createEmptyInstance: create)
+    ..e<Resuource>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'type', $pb.PbFieldType.OE, defaultOrMaker: Resuource.TRUCK, valueOf: Resuource.valueOf, enumValues: Resuource.values)
+    ..hasRequiredFields = false
+  ;
+
+  InitReq._() : super();
+  factory InitReq({
+    Resuource? type,
+  }) {
+    final _result = create();
+    if (type != null) {
+      _result.type = type;
+    }
+    return _result;
+  }
+  factory InitReq.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory InitReq.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  InitReq clone() => InitReq()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  InitReq copyWith(void Function(InitReq) updates) => super.copyWith((message) => updates(message as InitReq)) as InitReq; // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static InitReq create() => InitReq._();
+  InitReq createEmptyInstance() => create();
+  static $pb.PbList<InitReq> createRepeated() => $pb.PbList<InitReq>();
+  @$core.pragma('dart2js:noInline')
+  static InitReq getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<InitReq>(create);
+  static InitReq? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  Resuource get type => $_getN(0);
+  @$pb.TagNumber(1)
+  set type(Resuource v) { setField(1, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasType() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearType() => clearField(1);
 }
 

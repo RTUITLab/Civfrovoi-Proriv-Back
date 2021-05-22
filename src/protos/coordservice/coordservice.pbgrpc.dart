@@ -66,9 +66,9 @@ class CoordsServiceClient extends $grpc.Client {
       '/CoordsService/ListenCommands',
       ($0.Unit value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.Operaions.fromBuffer(value));
-  static final _$initApp = $grpc.ClientMethod<$0.Empty, $0.ID>(
+  static final _$initApp = $grpc.ClientMethod<$0.InitReq, $0.ID>(
       '/CoordsService/InitApp',
-      ($0.Empty value) => value.writeToBuffer(),
+      ($0.InitReq value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.ID.fromBuffer(value));
 
   CoordsServiceClient($grpc.ClientChannel channel,
@@ -137,7 +137,7 @@ class CoordsServiceClient extends $grpc.Client {
         options: options);
   }
 
-  $grpc.ResponseFuture<$0.ID> initApp($0.Empty request,
+  $grpc.ResponseFuture<$0.ID> initApp($0.InitReq request,
       {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$initApp, request, options: options);
   }
@@ -224,12 +224,12 @@ abstract class CoordsServiceBase extends $grpc.Service {
         true,
         ($core.List<$core.int> value) => $0.Unit.fromBuffer(value),
         ($0.Operaions value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $0.ID>(
+    $addMethod($grpc.ServiceMethod<$0.InitReq, $0.ID>(
         'InitApp',
         initApp_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($core.List<$core.int> value) => $0.InitReq.fromBuffer(value),
         ($0.ID value) => value.writeToBuffer()));
   }
 
@@ -289,7 +289,7 @@ abstract class CoordsServiceBase extends $grpc.Service {
   }
 
   $async.Future<$0.ID> initApp_Pre(
-      $grpc.ServiceCall call, $async.Future<$0.Empty> request) async {
+      $grpc.ServiceCall call, $async.Future<$0.InitReq> request) async {
     return initApp(call, await request);
   }
 
@@ -315,5 +315,5 @@ abstract class CoordsServiceBase extends $grpc.Service {
       $grpc.ServiceCall call, $0.OpeataionOn request);
   $async.Stream<$0.Operaions> listenCommands(
       $grpc.ServiceCall call, $0.Unit request);
-  $async.Future<$0.ID> initApp($grpc.ServiceCall call, $0.Empty request);
+  $async.Future<$0.ID> initApp($grpc.ServiceCall call, $0.InitReq request);
 }
