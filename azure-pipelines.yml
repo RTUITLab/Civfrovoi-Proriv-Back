@@ -49,8 +49,8 @@ stages:
         containerRegistry: 'rtuitlab connection by admin'
         repository: 'rtuitlab/itlab-cifrovoy-proryv-go-back'
         command: 'buildAndPush'
-        Dockerfile: '$(Pipeline.Workspace)/cifrovoy-proryv-build/Dockerfile'
-        buildContext: '$(Pipeline.Workspace)/cifrovoy-proryv-build'
+        Dockerfile: '$(Pipeline.Workspace)/itlab-cifrovoy-proryv-build/Dockerfile'
+        buildContext: '$(Pipeline.Workspace)/itlab-cifrovoy-proryv-build'
         tags: ${{variables.ImageTags}}
 - stage: deploy
   displayName: Deploy
