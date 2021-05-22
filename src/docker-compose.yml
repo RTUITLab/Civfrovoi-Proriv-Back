@@ -14,16 +14,16 @@ services:
             - "wp-db:/var/lib/mysql:rw"
         networks: 
             - database
-    back:
-        build: "."
-        container_name: "back_end"
-        volumes: 
-            - ./.env:/root/.env
-        ports: 
-            - 8080:8080
-        networks: 
-            - database
-            - dev-network
+    # back:
+    #     build: "."
+    #     container_name: "back_end"
+    #     volumes: 
+    #         - ./.env:/root/.env
+    #     ports: 
+    #         - 8080:8080
+    #     networks: 
+    #         - database
+    #         - dev-network
     message-broker:
         image: rabbitmq:3-management-alpine
         container_name: message-broker
