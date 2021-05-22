@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/RTUITLab/Civfrovoi-Proriv-Back/pkg/models/coordinates"
 	"fmt"
 	"net"
 	"time"
@@ -49,6 +50,9 @@ func (a *App) Start() error {
 		
 		},
 	)
+	if err := coordinates.InitTable(db); err != nil {
+		return err
+	}
 
 	if err != nil {
 		panic(err)
