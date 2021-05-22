@@ -7,9 +7,9 @@ services:
         ports: 
             - 3306:3306
         environment:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_USER: docker
-          MYSQL_PASSWORD: docker
+          MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+          MYSQL_USER: ${MYSQL_USER}
+          MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         volumes:
             - "wp-db:/var/lib/mysql:rw"
         networks: 
@@ -33,6 +33,9 @@ services:
         volumes:
             - ./dev-rabbitmq/data/:/var/lib/rabbitmq
             - ./dev-rabbitmq/log/:/var/log/rabbitmq
+        environment: 
+            RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
         restart: always
         networks:
             - dev-network
