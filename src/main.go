@@ -13,6 +13,6 @@ func main() {
 
 	log.Infof("App start on %s", a.Port)
 	if err := a.Start(); err != nil {
-		log.Panic("Failed to start app")
+		log.Panic("Failed to start app: ", err)
 	}
 }
