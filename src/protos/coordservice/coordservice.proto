@@ -33,6 +33,7 @@ enum Resuource {
     PLOW_AND_BRUSH_MACHINE      = 3;
     PLOW_AND_BRUSH_MACHINE_REG  = 4;
     HUMAN                       = 5;
+    DISPETCHER                  = 6;
 };
 
 message Coordinates {
@@ -86,6 +87,15 @@ message InitReq {
     Resuource type = 1;
 };
 
+message Task {
+    Coords on = 1;
+    string operation_name   = 2;
+};
+
+message Tasks {
+    repeated Task tasks = 1;
+};
+
 service CoordsService {
     rpc WriteCoords (WriteCoordsReq)        returns         (WriteCoordsResp);
     rpc GetCoords   (Units)                 returns         (stream GetCoordsResp);
@@ -99,4 +109,6 @@ service CoordsService {
     rpc ClearTemp(OpeataionOn)              returns         (Empty);
     rpc ListenCommands(Unit)                returns         (stream Operaions);
     rpc InitApp(InitReq)                    returns         (ID);
+    rpc OpenTask(Task)                      returns         (Empty);
+    rpc GetTask(Empty)                      returns         (Tasks);
 };

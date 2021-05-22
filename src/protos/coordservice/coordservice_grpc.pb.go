@@ -30,6 +30,8 @@ type CoordsServiceClient interface {
 	ClearTemp(ctx context.Context, in *OpeataionOn, opts ...grpc.CallOption) (*Empty, error)
 	ListenCommands(ctx context.Context, in *Unit, opts ...grpc.CallOption) (CoordsService_ListenCommandsClient, error)
 	InitApp(ctx context.Context, in *InitReq, opts ...grpc.CallOption) (*ID, error)
+	OpenTask(ctx context.Context, in *Task, opts ...grpc.CallOption) (*Empty, error)
+	GetTask(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Tasks, error)
 }
 
 type coordsServiceClient struct {
@@ -194,6 +196,24 @@ func (c *coordsServiceClient) InitApp(ctx context.Context, in *InitReq, opts ...
 	return out, nil
 }
 
+func (c *coordsServiceClient) OpenTask(ctx context.Context, in *Task, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/CoordsService/OpenTask", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *coordsServiceClient) GetTask(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Tasks, error) {
+	out := new(Tasks)
+	err := c.cc.Invoke(ctx, "/CoordsService/GetTask", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CoordsServiceServer is the server API for CoordsService service.
 // All implementations must embed UnimplementedCoordsServiceServer
 // for forward compatibility
@@ -210,6 +230,8 @@ type CoordsServiceServer interface {
 	ClearTemp(context.Context, *OpeataionOn) (*Empty, error)
 	ListenCommands(*Unit, CoordsService_ListenCommandsServer) error
 	InitApp(context.Context, *InitReq) (*ID, error)
+	OpenTask(context.Context, *Task) (*Empty, error)
+	GetTask(context.Context, *Empty) (*Tasks, error)
 	mustEmbedUnimplementedCoordsServiceServer()
 }
 
@@ -252,6 +274,12 @@ func (UnimplementedCoordsServiceServer) ListenCommands(*Unit, CoordsService_List
 }
 func (UnimplementedCoordsServiceServer) InitApp(context.Context, *InitReq) (*ID, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InitApp not implemented")
+}
+func (UnimplementedCoordsServiceServer) OpenTask(context.Context, *Task) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OpenTask not implemented")
+}
+func (UnimplementedCoordsServiceServer) GetTask(context.Context, *Empty) (*Tasks, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTask not implemented")
 }
 func (UnimplementedCoordsServiceServer) mustEmbedUnimplementedCoordsServiceServer() {}
 
@@ -488,6 +516,42 @@ func _CoordsService_InitApp_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CoordsService_OpenTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Task)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoordsServiceServer).OpenTask(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/CoordsService/OpenTask",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoordsServiceServer).OpenTask(ctx, req.(*Task))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CoordsService_GetTask_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoordsServiceServer).GetTask(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/CoordsService/GetTask",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoordsServiceServer).GetTask(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CoordsService_ServiceDesc is the grpc.ServiceDesc for CoordsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -534,6 +598,14 @@ var CoordsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "InitApp",
 			Handler:    _CoordsService_InitApp_Handler,
+		},
+		{
+			MethodName: "OpenTask",
+			Handler:    _CoordsService_OpenTask_Handler,
+		},
+		{
+			MethodName: "GetTask",
+			Handler:    _CoordsService_GetTask_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
