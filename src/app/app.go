@@ -50,12 +50,12 @@ func (a *App) Start() error {
 		
 		},
 	)
-	if err := coordinates.InitTable(db); err != nil {
-		return err
-	}
-
 	if err != nil {
 		panic(err)
+	}
+
+	if err := coordinates.InitTable(db); err != nil {
+		return err
 	}
 
 	rabbitConn, err := connToAMPQ(a.AMPQ_URL)
@@ -63,11 +63,11 @@ func (a *App) Start() error {
 		return err
 	}
 
-	Server := &server.Server{
-		DB: db,
-		GetCoordTime: time.Second,
-		RabbitConn: rabbitConn,
-	}
+	Server := server.New(
+		db,
+		rabbitConn,
+		time.Second,
+	)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", a.Port))
 	if err != nil {
